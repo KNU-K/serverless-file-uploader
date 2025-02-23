@@ -11,6 +11,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
+    // Parse the multipart form with a maximum memory of 10MB
     if err := r.ParseMultipartForm(10 << 20); err != nil { // 10 MB max memory
         http.Error(w, "Unable to parse form", http.StatusBadRequest)
         return
@@ -24,9 +25,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
     defer file.Close()
 
     if err := upload_service.SaveToFS(file, handler); err != nil {
-		http.Error(w, "Error saving file", http.StatusInternalServerError)
-		return
-	}
+        http.Error(w, "Error saving file", http.StatusInternalServerError)
+        return
+    }
 
     w.WriteHeader(http.StatusOK)
     w.Write([]byte("File uploaded successfully"))
