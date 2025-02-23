@@ -35,10 +35,23 @@ func TestHandler(t *testing.T) {
         t.Errorf("Handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
     }
 
-    uploadedFilePath := filepath.Join(".", "uploads", "test.txt")
-    if _, err := os.Stat(uploadedFilePath); os.IsNotExist(err) {
-        t.Errorf("Expected file to be uploaded, but it does not exist")
+    // Check if the file is uploaded with a random filename
+    uploadDir := filepath.Join(".", "uploads")
+    files, err := os.ReadDir(uploadDir)
+    if err != nil {
+        t.Fatalf("Error reading upload directory: %v", err)
     }
 
-    os.Remove(uploadedFilePath)
+    found := false
+    for _, file := range files {
+        if filepath.Ext(file.Name()) == ".txt" {
+            found = true
+            os.Remove(filepath.Join(uploadDir, file.Name()))
+            break
+        }
+    }
+
+    if !found {
+        t.Errorf("Expected file to be uploaded, but it does not exist")
+    }
 }
