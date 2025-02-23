@@ -1,4 +1,4 @@
-package handler
+package ping
 
 import (
 	"net/http"
@@ -13,7 +13,7 @@ func TestHandlePing(t *testing.T) {
         t.Fatal(err)
     }
     rr := httptest.NewRecorder()
-    handler := http.HandlerFunc(handlePing)
+    handler := http.HandlerFunc(Handler)
     handler.ServeHTTP(rr, req)
 
     if status := rr.Code; status != http.StatusOK {
